@@ -1,0 +1,1398 @@
+{UTF-8}
+"Free-Cash Flow"  = A FUNCTION OF( )
+	~	
+	~		|
+
+Full load hours grid=
+	Full load hours*(1-"Ratio electricity for hydrogen/grid")
+	~	h
+	~		|
+
+Full load hours electrolyser=
+	("Ratio electricity for hydrogen/grid"*Full load hours*Installed wind capacity)/Installed capacity electrolysers
+	~	h
+	~		|
+
+Technical Specifications  = A FUNCTION OF( )
+	~	
+	~		|
+
+Economical Specifications  = A FUNCTION OF( )
+	~	
+	~		|
+
+"Ratio electricity for hydrogen/grid"=
+	0.634
+	~	Dmnl
+	~		|
+
+"Net-present value at time"=
+	(Cash flow before taxes/((1+(Equity IRR/100))^Year value))/"Euro/billion Euro"
+	~	bEuro
+	~		|
+
+"Euro/billion Euro"=
+	1e+09
+	~	Euro
+	~		|
+
+Decommissioning timing signal=
+	PULSE TRAIN(2030+Operating time+2, 1 , 0 , 2070 )
+	~	Dmnl
+	~		|
+
+Decommissioning wind hub=
+	367250
+	~	Euro
+	~		|
+
+Cumulative direct costs= INTEG (
+	Direct costs,
+		0)
+	~	Euro
+	~		|
+
+Interest over debt=
+	(Debt interest/100)*Residual debt*-1
+	~	Euro
+	~		|
+
+Investment spread=
+	4
+	~	Year
+	~		|
+
+Investment spread signal=
+	PULSE TRAIN(0, 1 , 1 , 2030+Investment spread-1)
+	~	Year
+	~		|
+
+Debt repayments=
+	((Total loan/Debt repayment period)*Debt repayment signal)
+	~	Euro
+	~		|
+
+Net present value vs time= INTEG (
+	"Net-present value at time",
+		0)
+	~	bEuro
+	~		|
+
+Total investment=
+	Total costs per MW*1000*Installed wind capacity
+	~	Euro
+	~		|
+
+Cumulative cash flow before taxes= INTEG (
+	Cash flow before taxes,
+		0)
+	~	Euro
+	~		|
+
+Debt financing rate=
+	((Total investment*(Debt share/100))/Investment spread)*Investment spread signal
+	~	Euro
+	~		|
+
+Operating time signal=
+	PULSE TRAIN(2031, 1 , 1 , 2030+Operating time+1)
+	~	Year
+	~		|
+
+Debt repayment period=
+	14
+	~	Years
+	~		|
+
+Cash flow before taxes=
+	Income including inflation-Debt repayments-Equity financing rate-Interest over debt
+	~	Euro
+	~		|
+
+Income including inflation=
+	((Revenues from electricity+Revenues from hydrogen+Revenues from subsidy)*Cumulative inflation\
+		)-(Direct costs*Cumulative inflation)
+	~	Euro
+	~		|
+
+Residual debt= INTEG (
+	Debt shift,
+		0)
+	~	Euro
+	~		|
+
+Debt shift=
+	((Total loan/Debt repayment period)*Debt repayment signal)-Debt financing rate
+	~	Euro
+	~		|
+
+Decommissioning electrolysis=
+	25800
+	~	Euro
+	~		|
+
+Revenues from hydrogen=
+	Hydrogen price*Hydrogen production*"kg/kgton"*Operating time signal
+	~	Euro/Year
+	~		|
+
+Revenues from subsidy=
+	Hydrogen production*"kg/kgton"*Subsidy price*Subsidy signal*Operating time signal
+	~	Euro
+	~		|
+
+Total investment from equity= INTEG (
+	Equity financing rate,
+		0)
+	~	Euro
+	~		|
+
+Total loan=
+	(Debt share/100)*Total investment
+	~	Euro
+	~		|
+
+Direct costs=
+	((OPEX wind hub and infrastructure*Installed wind capacity*1000)+(OPEX electrolysis*\
+		Installed capacity electrolysers*1000
+	))+(Total decommissioning costs*Decommissioning timing signal)
+	~	Euro
+	~		|
+
+Debt repayment signal=
+	PULSE TRAIN(2031, 1 , 1 , 2030+Debt repayment period)
+	~	Dmnl
+	~		|
+
+Total investment from debt= INTEG (
+	Debt financing rate,
+		0)
+	~	Euro
+	~		|
+
+Total decommissioning costs=
+	(Installed wind capacity*Decommissioning wind hub*1000)+(Installed capacity electrolysers\
+		*Decommissioning electrolysis*1000)
+	~	Euro
+	~		|
+
+Operating time=
+	25
+	~	Year
+	~		|
+
+Revenues from electricity=
+	("MWh/TWh"*Electricity feed to grid)*Electricity price*Operating time signal
+	~	Euro/Year
+	~		|
+
+Equity financing rate=
+	((Total investment*(Equity share/100))/Investment spread)*Investment spread signal
+	~	Euro
+	~		|
+
+AC collection cables=
+	65720
+	~	Euro
+	~		|
+
+AC collection cables installation=
+	19000
+	~	Euro
+	~		|
+
+AC collection station=
+	44301
+	~	Euro
+	~		|
+
+BoP procurement=
+	AC collection cables+AC collection station+Corrosion and scour protection+Inter Array cables\
+		+Turbine foundation size dependend
+	~	Euro
+	~		|
+
+Breakwater=
+	22881
+	~	Euro
+	~		|
+
+Storage compression=
+	36158
+	~	Euro
+	~		|
+
+Cable laying facility=
+	2500
+	~	Euro
+	~		|
+
+Port switchyard=
+	2004
+	~	Euro
+	~		|
+
+CAPEX change electrolysis=
+	1
+	~	Dmnl
+	~		|
+
+CAPEX change island=
+	1
+	~	Dmnl
+	~		|
+
+CAPEX change port=
+	1
+	~	Dmnl
+	~		|
+
+CAPEX change transport=
+	1
+	~	Dmnl
+	~		|
+
+CAPEX change wind hub=
+	1
+	~	Dmnl
+	~		|
+
+Total H2 pipeline=
+	((Wind hub distance to shore*1.15)*H2 pipeline)/(1000*Installed wind capacity/2)
+	~	Euro
+	~		|
+
+Compression=
+	0
+	~	Euro
+	~		|
+
+OPEX electrolysis=
+	38382*OPEX electrolysis change
+	~	Euro
+	~		|
+
+OPEX electrolysis change=
+	1
+	~	Dmnl
+	~		|
+
+Corrosion and scour protection=
+	33900
+	~	Euro
+	~		|
+
+OPEX wind hub and infrastructure=
+	85824*OPEX wind change
+	~	Euro
+	~		|
+
+H2 pipeline=
+	1.42341e+06
+	~	Euro/km
+	~		|
+
+Port converter terminal=
+	57848
+	~	Euro
+	~		|
+
+Turbine procurement=
+	Rotor nacelle assembly+Supplier commissions warranty+Tower procurement final
+	~	Euro
+	~		|
+
+Cumulative inflation=
+	((1+(Inflation rate/100))^Year value)/1
+	~	Dmnl
+	~		|
+
+Port land acquisition=
+	1234
+	~	Euro
+	~		|
+
+HVDC cable total=
+	((3*Wind hub distance to shore*1.1)*HVDC cable)/(1000*Installed wind capacity)
+	~	Euro
+	~		|
+
+HVDC installation total=
+	((3*Wind hub distance to shore*1.1)*HVDC installation)/(1000*Installed wind capacity\
+		)
+	~	Euro
+	~		|
+
+Reclamation=
+	31879
+	~	Euro
+	~		|
+
+Electrolysis project management=
+	28625
+	~	Euro
+	~		|
+
+Island total=
+	(Island construction+Island electrical equipment)*CAPEX change island
+	~	Euro
+	~		|
+
+Supplier commissions warranty=
+	192100
+	~	Euro
+	~		|
+
+Inflation rate=
+	1.5
+	~	Dmnl
+	~		|
+
+Shoreline=
+	47511
+	~	Euro
+	~		|
+
+Desalination=
+	7114
+	~	Euro
+	~		|
+
+Inter Array cables installation=
+	34890
+	~	Euro
+	~		|
+
+Turbine foundation=
+	472428
+	~	Euro
+	~		|
+
+Harbor=
+	3750
+	~	Euro
+	~		|
+
+Storage=
+	82862
+	~	Euro
+	~		|
+
+HVDC cable=
+	1.674e+06
+	~	Euro/km
+	~		|
+
+Port costs=
+	(Port converter terminal+Port land acquisition+Port switchyard)*CAPEX change port
+	~	Euro
+	~		|
+
+HVDC installation=
+	420000
+	~	Euro
+	~		|
+
+Electrolysis plant=
+	219379
+	~	Euro
+	~		|
+
+Island switchyeard=
+	41977
+	~	Euro
+	~		|
+
+OPEX wind change=
+	1
+	~	Dmnl
+	~		|
+
+Tower procurement=
+	86120
+	~	Euro
+	~		|
+
+Total electrolysis=
+	((Compression+Desalination+Electrolysis plant+Electrolysis project management+Storage\
+		+Storage compression)*CAPEX change electrolysis)*Offshore installation factor
+	~	Euro
+	~		|
+
+Transmission transport total=
+	(HVDC cable total+HVDC installation total+Total H2 pipeline)*CAPEX change transport
+	~	Euro
+	~		|
+
+Gross income= INTEG (
+	Income including inflation,
+		0)
+	~	Euro
+	~		|
+
+Wind hub total=
+	(AC collection station installation+BoP procurement+Cable installation+Foundation installation\
+		+Onshore and offshore logistics wind hub
+	+Soft costs wind hub+Turbine installation+Turbine procurement+Wind hub project management\
+		)*CAPEX change wind hub
+	~	Euro
+	~		|
+
+Rotor nacelle assembly=
+	470351
+	~	Euro
+	~		|
+
+Inter Array cables=
+	46422
+	~	Euro
+	~		|
+
+Island converter terminal=
+	97615
+	~	Euro
+	~		|
+
+Cumulative income from subsidies= INTEG (
+	Revenues from subsidy,
+		0)
+	~	
+	~		|
+
+Subsidy period=
+	17
+	~	Year [0,?]
+	~		|
+
+Subsidy signal=
+	PULSE TRAIN(0, 1 , 1 , 2030+Subsidy period-1)
+	~	Year
+	~		|
+
+Cable installation=
+	AC collection cables installation+Inter Array cables installation
+	~	Euro
+	~		|
+
+"kg/kgton"=
+	1e+06
+	~	kg/kton
+	~		|
+
+Debt share=
+	65
+	~	Dmnl
+	~		|
+
+"MWh/TWh"=
+	1e+06
+	~	MWh/TWh
+	~		|
+
+Turbine foundation size dependend=
+	Turbine foundation*(1+Impact water depth on tower and foundation)
+	~	Euro
+	~		|
+
+Cumulative revenues from electricity= INTEG (
+	Revenues from electricity,
+		0)
+	~	Euro
+	~		|
+
+Cumulative revenues from hydrogen= INTEG (
+	Revenues from hydrogen,
+		0)
+	~	Euro
+	~		|
+
+Debt interest=
+	2.5
+	~	Dmnl
+	~		|
+
+Electricity price=
+	59.8
+	~	Euro/MWh
+	~		|
+
+Shoreline protection final=
+	Shoreline*(1+Impact water depth on island construction)
+	~	Euros
+	~		|
+
+Year value= INTEG (
+	Time step plus one,
+		0)
+	~	Year
+	~		|
+
+Equity IRR=
+	9
+	~	Dmnl
+	~		|
+
+Equity share=
+	100-Debt share
+	~	Dmnl
+	~		|
+
+Hydrogen price=
+	2
+	~	Euro/kg
+	~		|
+
+Impact water depth on island construction=
+	(Water depth hub-25)*0.006
+	~	Dmnl
+	~		|
+
+Subsidy price=
+	2
+	~	Euro/kg [0,?]
+	~		|
+
+Tower procurement final=
+	Tower procurement*(1+Impact water depth on tower and foundation)
+	~	Euro
+	~		|
+
+Time step plus one=
+	TIME STEP
+	~	Year
+	~		|
+
+Total costs per MW=
+	Island construction+Island total+Port costs+Total electrolysis+Transmission transport total\
+		+Wind hub total
+	~	Euro
+	~		|
+
+Reclamation final=
+	Reclamation*(1+Impact water depth on island construction)
+	~	Euro
+	~		|
+
+Water depth hub=
+	20
+	~	m
+	~		|
+
+"WACC / Discount rate"=
+	1/((1+((Debt interest/100)*(Debt share/100))+((Equity IRR/100)*(Equity share/100)))^\
+		Year value)
+	~	Dmnl
+	~		|
+
+Impact water depth on tower and foundation=
+	(Water depth hub-25)*0.006
+	~	Dmnl
+	~		|
+
+Wind hub project management=
+	127721
+	~	Euro
+	~		|
+
+AC collection station installation=
+	82982
+	~	Euro
+	~		|
+
+Island electrical equipment=
+	Island converter terminal+Island switchyeard
+	~	Euro
+	~		|
+
+Offshore installation factor=
+	1.1
+	~	Dmnl
+	~		|
+
+Onshore and offshore logistics wind hub=
+	49300
+	~	Euro
+	~		|
+
+DC transmission efficiency losses=
+	1.5
+	~	Dmnl
+	~		|
+
+Electrolyser capacity factor=
+	Wind farm losses electrolyser calculation*((100-AC collection cable losses-Inter Array transmission losses\
+		)/100)
+	~	Dmnl
+	~		|
+
+Full load hours=
+	5775
+	~	h
+	~		|
+
+Island capacity factor=
+	Wind farm losses grid calculation*((100-AC collection cable losses-Inter Array transmission losses\
+		)/100)
+	~	Dmnl
+	~		|
+
+Foundation installation=
+	88149
+	~	Euro
+	~		|
+
+Grid capacity factor=
+	Shore capacity factor*((100-((Wind hub distance to shore/100)*DC transmission efficiency losses\
+		))/100)
+	~	Dmnl
+	~		|
+
+Wind hub distance to shore=
+	231
+	~	km
+	~		|
+
+Soft costs wind hub=
+	105820
+	~	Euro
+	~		|
+
+Island construction=
+	Breakwater+Cable laying facility+Harbor+Reclamation final+Shoreline protection final
+	~	Euro
+	~		|
+
+Turbine installation=
+	56500
+	~	Euro
+	~		|
+
+"kg/ton"=
+	1e-06
+	~	kg/kton
+	~		|
+
+"TWh/GWh"=
+	0.001
+	~	TWh/GWh
+	~		|
+
+Hydrogen production=
+	(((Installed capacity electrolysers*Hours per year*(Capacity factor electrolysis after system losses\
+		*((100-Pipeline efficiency losses
+	)/100)))*"TWh/GWh")/Energy contect H2)*"kg/ton"
+	~	kton/Year
+	~		|
+
+Electricity feed to grid=
+	((Installed wind capacity*Hours per year*(Grid capacity factor*((100-Port converter terminal power losses\
+		)/100))))*"TWh/GWh"
+	~	TWh/Year
+	~		|
+
+H2 system energy requirements loss=
+	2.94
+	~	Dmnl
+	~		|
+
+Capacity factor electrolysis after system losses=
+	Electrolyser pipeline inflow capacity factor*((100-H2 system energy requirements loss\
+		)/100)
+	~	Dmnl
+	~		|
+
+Compression efficiency loss=
+	0.5
+	~	Dmnl
+	~		|
+
+Compressor inflow capacity factor=
+	Electrolyser inflow capacity factor*(Electrolyser efficiency-(100-Stack degradation efficiency loss final\
+		))/100
+	~	Dmnl
+	~		|
+
+Electrolyser pipeline inflow capacity factor=
+	Compressor inflow capacity factor*((100-Compression efficiency loss)/100)
+	~	Dmnl
+	~		|
+
+Pipeline efficiency losses=
+	0.53
+	~	Dmnl
+	~		|
+
+Electrolyser inflow capacity factor=
+	Electrolyser capacity factor*((100-Cold start up efficiency loss)/100)
+	~	Dmnl
+	~		|
+
+AC collection cable losses=
+	0.85
+	~	Dmnl
+	~		|
+
+Cold start up efficiency loss=
+	2.75
+	~	Dmnl
+	~		|
+
+Cumulative hydrogen production= INTEG (
+	Hydrogen production,
+		0)
+	~	kton
+	~		|
+
+Cumulative power to electrolysers 0= INTEG (
+	Electricity feed electrolysers 0,
+		0)
+	~	TWh
+	~		|
+
+Cumulative power to grid= INTEG (
+	Electricity feed to grid,
+		0)
+	~	TWh
+	~		|
+
+Curtailment losses=
+	1.47
+	~	Dmnl
+	~		|
+
+Degradation=
+	Stack degradation efficiency loss*TIME STEP
+	~	Dmnl*Year
+	~		|
+
+Electricity feed electrolysers 0=
+	(Installed capacity electrolysers 0*Hours per year*(((100-Island converter terminal power losses 0\
+		)/100)))/1000
+	~	TWh
+	~		|
+
+Electrolyser efficiency=
+	66
+	~	Dmnl
+	~		|
+
+Energy contect H2=
+	(1/3*100)/1e+09
+	~	TWh/kg
+	~		|
+
+Wind farm losses electrolyser calculation=
+	(Full load hours electrolyser/Hours per year)*((100-Wake losses-Curtailment losses)/\
+		100)
+	~	Dmnl
+	~		|
+
+Installed capacity electrolysers=
+	6
+	~	GW
+	~		|
+
+Installed capacity electrolysers 0=
+	6
+	~	GW
+	~		|
+
+Installed wind capacity=
+	12
+	~	GW
+	~		|
+
+Inter Array transmission losses=
+	0.67
+	~	Dmnl
+	~		|
+
+Island converter terminal power losses=
+	2.5
+	~	Dmnl
+	~		|
+
+Island converter terminal power losses 0=
+	2.5
+	~	Dmnl
+	~		|
+
+Port converter terminal power losses=
+	2.8
+	~	Dmnl
+	~		|
+
+Stack replacement=
+	PULSE TRAIN(13, 1 , 8 , 2070 )
+	~	Year
+	~		|
+
+Upgrade=
+	Stack replacement*8*Stack degradation efficiency loss
+	~	Dmnl/Year
+	~		|
+
+Shore capacity factor=
+	Island capacity factor*((100-Island converter terminal power losses)/100)
+	~	Dmnl
+	~		|
+
+Stack degradation efficiency loss=
+	1.5
+	~	Dmnl
+	~		|
+
+Stack degradation efficiency loss final= INTEG (
+	Upgrade-Degradation,
+		100)
+	~	Dmnl
+	~		|
+
+Wake losses=
+	7
+	~	Dmnl
+	~		|
+
+Wind farm losses grid calculation=
+	(Full load hours grid/Hours per year)*((100-Wake losses-Curtailment losses)/100)
+	~	Dmnl
+	~		|
+
+Hours per year=
+	8760
+	~	h
+	~		|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 2058
+	~	Year
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 2030
+	~	Year
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP
+	~	Year [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 1
+	~	Year [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Technical_Specifications
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|255-255-255|96,96,80,0
+10,1,Hours per year,815,236,31,18,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,2,Wake losses,472,366,41,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,3,Curtailment losses,471,424,57,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,4,Inter Array transmission losses,539,589,60,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,5,AC collection cable losses,674,589,44,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,6,Island converter terminal power losses,826,558,69,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,7,Installed capacity electrolysers,1493,239,55,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-0-128,0,0,0,0,0,0
+10,8,Electrolyser capacity factor,730,472,54,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,9,Wind farm losses electrolyser calculation,645,390,78,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,10,9,8,0,0,0,0,0,64,0,-1--1--1,,1|(681,426)|
+1,11,5,8,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(698,536)|
+1,12,4,8,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(628,534)|
+1,13,3,9,0,1,0,0,3,64,0,255-0-0,|12||0-0-0,1|(540,410)|
+1,14,2,9,0,1,0,0,3,64,0,255-0-0,|12||0-0-0,1|(533,373)|
+1,15,1,9,0,1,0,0,0,64,0,-1--1--1,,1|(735,307)|
+10,16,Full load hours electrolyser,566,308,47,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-0-128,0,0,0,0,0,0
+1,17,16,9,0,0,0,0,3,64,0,0-0-128,|12||0-0-0,1|(600,343)|
+10,18,Cumulative power to grid,1179,804,54,23,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,19,48,965,804,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,20,22,18,4,0,0,22,0,0,0,-1--1--1,,1|(1085,805)|
+1,21,22,19,100,0,0,22,0,0,0,-1--1--1,,1|(1004,805)|
+11,22,48,1040,805,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,23,Electricity feed to grid,1040,832,56,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,24,Installed wind capacity,969,921,44,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-0-128,0,0,0,0,0,0
+1,25,24,23,0,0,0,0,3,64,0,0-0-128,|12||0-0-0,1|(999,882)|
+10,26,Hours per year,751,863,38,18,8,130,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,27,26,23,0,0,0,0,0,64,0,-1--1--1,,1|(879,849)|
+10,28,Wind farm losses grid calculation,639,775,55,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,29,Full load hours grid,453,716,47,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-0-128,0,0,0,0,0,0
+1,30,29,28,0,0,0,0,3,64,0,0-0-128,|12||0-0-0,1|(535,741)|
+10,31,Wake losses,476,769,50,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,32,Curtailment losses,504,820,42,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,33,32,28,0,0,0,0,0,64,0,-1--1--1,,1|(558,801)|
+1,34,31,28,0,0,0,0,0,64,0,-1--1--1,,1|(548,770)|
+1,35,26,28,0,0,0,0,0,64,0,-1--1--1,,1|(701,823)|
+10,36,Island capacity factor,693,689,48,20,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,37,4,36,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(609,634)|
+1,38,5,36,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(681,631)|
+1,39,28,36,0,0,0,0,0,64,0,-1--1--1,,1|(661,738)|
+10,40,DC transmission efficiency losses,1131,633,53,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,41,Grid capacity factor,981,705,43,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,42,36,45,0,0,0,0,0,64,0,-1--1--1,,1|(760,672)|
+1,43,40,41,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1062,666)|
+1,44,41,22,0,0,0,0,0,64,0,-1--1--1,,1|(1010,755)|
+10,45,Shore capacity factor,827,656,33,24,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,46,6,45,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(826,597)|
+1,47,45,41,0,0,0,0,0,64,0,-1--1--1,,1|(892,676)|
+10,48,Port converter terminal power losses,1142,709,69,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,49,48,22,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1088,759)|
+12,50,0,665,235,66,19,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Electrolyser Feed
+12,51,0,523,666,66,19,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Grid Feed
+10,52,Cumulative hydrogen production,1495,341,68,21,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,53,48,1289,342,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,54,56,52,4,0,0,22,0,0,0,-1--1--1,,1|(1394,342)|
+1,55,56,53,100,0,0,22,0,0,0,-1--1--1,,1|(1324,342)|
+11,56,48,1355,342,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,57,Hydrogen production,1355,369,35,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,58,Energy contect H2,1345,240,41,18,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,59,58,56,0,0,0,0,0,64,0,-1--1--1,,1|(1349,290)|
+10,60,Cold start up efficiency loss,836,362,44,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,61,Compressor inflow capacity factor,1145,445,61,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,62,Stack degradation efficiency loss,1448,700,58,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,63,TIME STEP,1546,667,50,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,64,Electrolyser efficiency,1144,562,38,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,65,64,61,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1144,510)|
+10,66,Stack degradation efficiency loss final,1441,543,59,21,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,67,48,1276,542,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,68,70,66,4,0,0,22,0,0,0,-1--1--1,,1|(1355,542)|
+1,69,70,67,100,0,0,22,0,0,0,-1--1--1,,1|(1301,542)|
+11,70,48,1322,542,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,71,Upgrade,1322,561,41,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,72,48,1614,542,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,73,75,72,4,0,0,22,0,0,0,-1--1--1,,1|(1577,542)|
+1,74,75,66,100,0,0,22,0,0,0,-1--1--1,,1|(1519,542)|
+11,75,48,1545,542,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,76,Degradation,1545,561,39,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,77,63,76,0,0,0,0,0,64,0,-1--1--1,,1|(1545,620)|
+1,78,62,76,0,0,0,0,0,64,0,-1--1--1,,1|(1494,632)|
+10,79,Stack replacement,1347,638,50,17,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,80,79,71,0,0,0,0,0,64,0,-1--1--1,,1|(1335,603)|
+1,81,62,71,0,0,0,0,0,64,0,-1--1--1,,1|(1385,631)|
+10,82,Compression efficiency loss,966,300,44,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,83,66,61,0,0,0,0,0,64,0,-1--1--1,,1|(1298,496)|
+10,84,H2 system energy requirements loss,1036,204,57,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,85,Electrolyser inflow capacity factor,912,436,60,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,86,8,85,0,0,0,0,0,64,0,-1--1--1,,1|(811,456)|
+1,87,60,85,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(868,394)|
+1,88,85,61,0,0,0,0,0,64,0,-1--1--1,,1|(1021,439)|
+10,89,Electrolyser pipeline inflow capacity factor,1147,358,68,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,90,82,89,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1041,324)|
+1,91,61,89,0,0,0,0,0,64,0,-1--1--1,,1|(1145,408)|
+10,92,Capacity factor electrolysis after system losses,1197,258,56,31,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,93,89,92,0,0,0,0,0,64,0,-1--1--1,,1|(1165,320)|
+1,94,84,92,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1109,228)|
+1,95,92,56,0,0,0,0,0,64,0,-1--1--1,,1|(1294,309)|
+10,96,Pipeline efficiency losses,1422,457,57,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,97,96,57,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(1392,418)|
+1,98,7,56,0,0,0,0,3,64,0,0-0-128,|12||0-0-0,1|(1419,293)|
+10,99,Hours per year,1252,422,40,23,8,130,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,100,99,57,0,0,0,0,0,64,0,-1--1--1,,1|(1299,397)|
+10,101,"kg/ton",1520,414,21,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,102,101,57,0,0,0,0,0,64,0,-1--1--1,,1|(1451,395)|
+10,103,"TWh/GWh",1085,889,36,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,104,103,23,0,0,0,0,0,64,0,-1--1--1,,1|(1070,869)|
+10,105,"TWh/GWh",1310,456,26,18,8,130,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,106,105,57,0,0,0,0,0,64,0,-1--1--1,,1|(1328,419)|
+10,107,Wind hub distance to shore,988,550,59,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,108,107,41,1,0,0,0,0,64,0,-1--1--1,,1|(1003,643)|
+10,109,Full load hours,222,217,47,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,110,"Ratio electricity for hydrogen/grid",379,329,60,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,111,Installed capacity electrolysers,520,212,60,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,112,111,16,0,0,0,0,0,64,0,-1--1--1,,1|(539,253)|
+1,113,110,16,0,0,0,0,0,64,0,-1--1--1,,1|(472,318)|
+1,114,110,29,1,0,0,0,0,64,0,-1--1--1,,1|(401,636)|
+10,115,Installed wind capacity,401,230,49,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,116,115,16,0,0,0,0,0,64,0,-1--1--1,,1|(476,265)|
+1,117,109,16,0,0,0,0,0,64,0,-1--1--1,,1|(384,259)|
+1,118,109,29,1,0,0,0,0,64,0,-1--1--1,,1|(337,635)|
+10,119,Technical Specifications,1343,148,147,19,3,131,0,15,0,0,0,0,0-64-128,0-64-128,|18||255-255-255,0,0,0,0,0,0
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Economical_Specifications
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|255-255-255|96,96,90,0
+10,1,Wind hub project management,324,137,56,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,2,Foundation installation,819,195,36,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,3,Rotor nacelle assembly,215,183,56,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,4,Tower procurement final,243,302,55,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,5,Supplier commissions warranty,170,242,99,27,8,131,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,6,Inter Array cables,242,416,57,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,7,AC collection cables,227,458,44,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,8,AC collection station,222,508,44,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,9,Corrosion and scour protection,207,554,66,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,10,Turbine installation,829,256,46,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,11,Inter Array cables installation,793,360,58,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,12,AC collection cables installation,829,304,66,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,13,AC collection station installation,814,428,67,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,14,Soft costs wind hub,831,490,49,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,15,Onshore and offshore logistics wind hub,831,550,69,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,16,Turbine procurement,386,207,62,16,8,131,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,17,5,16,0,0,0,0,0,64,0,-1--1--1,,1|(289,222)|
+1,18,4,16,0,0,0,0,0,64,0,-1--1--1,,1|(310,256)|
+1,19,3,16,0,0,0,0,0,64,0,-1--1--1,,1|(290,192)|
+10,20,Reclamation final,1195,169,53,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,21,Shoreline protection final,1045,221,47,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,22,Breakwater,1080,284,38,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,23,Cable laying facility,1098,316,40,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,24,Harbor,1189,329,24,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,25,Island converter terminal,1092,393,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,26,Island switchyeard,1116,426,58,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,27,Island construction,1222,264,59,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,28,20,27,0,0,0,0,0,64,0,-1--1--1,,1|(1206,209)|
+1,29,21,27,0,0,0,0,0,64,0,-1--1--1,,1|(1127,240)|
+1,30,22,27,0,0,0,0,0,64,0,-1--1--1,,1|(1133,276)|
+1,31,23,27,0,0,0,0,0,64,0,-1--1--1,,1|(1160,290)|
+1,32,24,27,0,0,0,0,0,64,0,-1--1--1,,1|(1201,302)|
+10,33,BoP procurement,516,526,55,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,34,6,33,0,0,0,0,0,64,0,-1--1--1,,1|(362,464)|
+1,35,7,33,0,0,0,0,0,64,0,-1--1--1,,1|(359,488)|
+1,36,8,33,0,0,0,0,0,64,0,-1--1--1,,1|(356,515)|
+1,37,9,33,0,0,0,0,0,64,0,-1--1--1,,1|(360,540)|
+10,38,Cable installation,979,413,46,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,39,11,38,0,0,0,0,0,64,0,-1--1--1,,1|(885,385)|
+10,40,Island electrical equipment,1254,407,49,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,41,25,40,0,0,0,0,0,64,0,-1--1--1,,1|(1167,398)|
+1,42,26,40,0,0,0,0,0,64,0,-1--1--1,,1|(1182,417)|
+10,43,Electrolysis project management,267,649,61,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,44,Electrolysis plant,235,697,53,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,45,Compression,261,736,42,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,46,Desalination,263,771,39,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,47,Storage compression,242,798,41,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,48,Storage,261,838,26,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,49,Offshore installation factor,456,826,54,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,50,Total electrolysis,435,747,53,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,51,43,50,0,0,0,0,0,64,0,-1--1--1,,1|(351,698)|
+1,52,44,50,0,0,0,0,0,64,0,-1--1--1,,1|(328,720)|
+1,53,45,50,0,0,0,0,0,64,0,-1--1--1,,1|(335,740)|
+1,54,46,50,0,0,0,0,0,64,0,-1--1--1,,1|(335,761)|
+1,55,47,50,0,0,0,0,0,64,0,-1--1--1,,1|(331,774)|
+1,56,48,50,0,0,0,0,0,64,0,-1--1--1,,1|(341,795)|
+1,57,49,50,0,0,0,0,0,64,0,-1--1--1,,1|(445,789)|
+10,58,HVDC cable total,916,651,57,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,59,Wind hub distance to shore,815,714,64,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,60,59,58,0,0,0,0,0,64,0,-1--1--1,,1|(865,682)|
+10,61,HVDC cable,696,628,42,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+1,62,61,58,0,0,0,0,0,64,0,-1--1--1,,1|(791,637)|
+10,63,Installed wind capacity,674,680,49,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,64,63,58,1,0,0,0,0,64,0,-1--1--1,,1|(769,661)|
+10,65,HVDC installation,669,868,48,18,8,131,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,66,HVDC installation total,854,845,49,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,67,59,66,0,0,0,0,0,64,0,-1--1--1,,1|(831,772)|
+1,68,63,66,0,0,0,0,0,64,0,-1--1--1,,1|(758,757)|
+1,69,65,66,0,0,0,0,0,64,0,-1--1--1,,1|(754,857)|
+10,70,Water depth hub,621,213,53,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,71,70,72,0,0,0,0,0,64,0,-1--1--1,,1|(549,251)|
+10,72,Impact water depth on tower and foundation,452,305,76,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,73,72,74,0,0,0,0,0,64,0,-1--1--1,,1|(402,338)|
+10,74,Turbine foundation size dependend,342,379,60,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,75,72,4,0,0,0,0,0,64,0,-1--1--1,,1|(343,303)|
+1,76,74,33,0,0,0,0,0,64,0,-1--1--1,,1|(423,447)|
+10,77,Impact water depth on island construction,1020,147,74,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,78,70,77,1,0,0,0,0,64,0,-1--1--1,,1|(805,142)|
+1,79,77,21,0,0,0,0,0,64,0,-1--1--1,,1|(1029,177)|
+1,80,77,20,0,0,0,0,0,64,0,-1--1--1,,1|(1111,158)|
+10,81,Total H2 pipeline,1030,761,54,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+10,82,H2 pipeline,964,700,37,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+1,83,82,81,0,0,0,0,0,64,0,-1--1--1,,1|(991,725)|
+1,84,59,81,0,0,0,0,0,64,0,-1--1--1,,1|(922,736)|
+1,85,63,81,1,0,0,0,0,64,0,-1--1--1,,1|(773,749)|
+10,86,Port land acquisition,1236,499,34,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,87,Port switchyard,1153,550,50,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,88,Port converter terminal,1162,587,46,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,89,Port costs,1333,561,33,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||192-128-192,0,0,0,0,0,0
+1,90,88,89,0,0,0,0,0,64,0,-1--1--1,,1|(1247,574)|
+1,91,87,89,0,0,0,0,0,64,0,-1--1--1,,1|(1244,555)|
+1,92,86,89,0,0,0,0,0,64,0,-1--1--1,,1|(1284,530)|
+1,93,12,38,0,0,0,0,0,64,0,-1--1--1,,1|(897,354)|
+10,94,Turbine foundation,129,357,59,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+1,95,94,74,0,0,0,0,0,64,0,-1--1--1,,1|(228,366)|
+10,96,Tower procurement,101,300,41,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+1,97,96,4,0,0,0,0,0,64,0,-1--1--1,,1|(158,300)|
+10,98,Reclamation,1204,103,39,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+10,99,Shoreline,919,217,30,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||0-128-0,0,0,0,0,0,0
+1,100,99,21,0,0,0,0,0,64,0,-1--1--1,,1|(966,217)|
+1,101,98,20,0,0,0,0,0,64,0,-1--1--1,,1|(1200,129)|
+12,102,0,524,127,66,19,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Wind hub costs
+12,103,0,863,103,66,19,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Island costs
+12,104,0,960,594,75,20,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Transmission/transport costs
+12,105,0,484,673,66,19,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Electrolysis costs
+12,106,0,1410,497,66,19,3,135,0,7,-1,0,0,0,255-255-255,0-0-128,|12||255-255-255,0,0,0,0,0,0
+Port costs
+10,107,Total costs per MW,1419,760,67,18,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,108,Wind hub total,588,393,47,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,109,1,108,1,0,0,0,0,64,0,-1--1--1,,1|(512,228)|
+1,110,16,108,1,0,0,0,0,64,0,-1--1--1,,1|(500,264)|
+1,111,33,108,1,0,0,0,0,64,0,-1--1--1,,1|(569,451)|
+1,112,15,108,1,0,0,0,0,64,0,-1--1--1,,1|(633,472)|
+1,113,14,108,1,0,0,0,0,64,0,-1--1--1,,1|(647,441)|
+1,114,13,108,1,0,0,0,0,64,0,-1--1--1,,1|(702,426)|
+1,115,38,108,1,0,0,0,0,64,0,-1--1--1,,1|(790,403)|
+1,116,10,108,1,0,0,0,0,64,0,-1--1--1,,1|(736,276)|
+1,117,2,108,1,0,0,0,0,64,0,-1--1--1,,1|(680,241)|
+10,118,Wind hub total,1280,680,56,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,119,118,107,0,0,0,0,0,64,0,-1--1--1,,1|(1336,712)|
+10,120,Island construction,1237,733,44,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,121,Total electrolysis,1259,790,40,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,122,Transmission transport total,1072,673,45,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,123,66,122,1,0,0,0,0,64,0,-1--1--1,,1|(1111,807)|
+1,124,81,122,1,0,0,0,0,64,0,-1--1--1,,1|(1073,717)|
+1,125,58,122,0,0,0,0,0,64,0,-1--1--1,,1|(993,661)|
+10,126,Transmission transport total,1296,833,49,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,127,Port costs,1426,828,42,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,128,Island total,1345,321,35,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,129,40,128,0,0,0,0,0,64,0,-1--1--1,,1|(1298,364)|
+1,130,27,128,0,0,0,0,0,64,0,-1--1--1,,1|(1276,289)|
+10,131,Island total,1434,674,44,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,132,120,107,0,0,0,0,0,64,0,-1--1--1,,1|(1309,743)|
+1,133,131,107,0,0,0,0,0,64,0,-1--1--1,,1|(1428,706)|
+1,134,121,107,0,0,0,0,0,64,0,-1--1--1,,1|(1318,778)|
+1,135,126,107,0,0,0,0,0,64,0,-1--1--1,,1|(1351,799)|
+1,136,127,107,0,0,0,0,0,64,0,-1--1--1,,1|(1423,804)|
+10,137,CAPEX change wind hub,327,65,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,138,CAPEX change island,1416,211,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,139,CAPEX change electrolysis,583,797,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,140,CAPEX change transport,878,949,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,141,CAPEX change port,1028,489,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,142,139,50,0,0,0,0,0,64,0,-1--1--1,,1|(505,771)|
+1,143,137,108,1,0,0,0,0,64,0,-1--1--1,,1|(515,382)|
+1,144,140,122,1,0,0,0,0,64,0,-1--1--1,,1|(1152,866)|
+1,145,138,128,0,0,0,0,0,64,0,-1--1--1,,1|(1381,264)|
+1,146,141,89,0,0,0,0,0,64,0,-1--1--1,,1|(1183,525)|
+10,147,Economical Specifications,1280,40,147,19,3,131,0,15,0,0,0,0,0-64-128,0-64-128,|18||255-255-255,0,0,0,0,0,0
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*Free-Cash_Flow
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|255-255-255|96,96,70,0
+10,1,Total costs per MW,1195,623,58,19,8,130,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,2,Hydrogen price,57,508,49,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,3,Electricity price,23,204,49,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,4,Electricity feed to grid,46,382,52,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,5,Hydrogen production,221,705,40,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,6,Cumulative revenues from hydrogen,337,595,87,24,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,7,Cumulative revenues from electricity,336,264,84,29,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,8,48,60,594,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,9,11,6,4,0,0,22,0,0,0,-1--1--1,,1|(207,594)|
+1,10,11,8,100,0,0,22,0,0,0,-1--1--1,,1|(111,594)|
+11,11,48,158,594,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,12,Revenues from hydrogen,158,621,48,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,13,48,65,269,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,14,16,7,4,0,0,22,0,0,0,-1--1--1,,1|(209,269)|
+1,15,16,13,100,0,0,22,0,0,0,-1--1--1,,1|(115,269)|
+11,16,48,161,269,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,17,Revenues from electricity,161,296,48,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,18,5,12,0,0,0,0,0,64,0,-1--1--1,,1|(193,668)|
+1,19,2,12,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(98,555)|
+10,20,"MWh/TWh",256,377,38,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,21,20,17,0,0,0,0,0,64,0,-1--1--1,,1|(218,344)|
+1,22,4,17,0,0,0,0,0,64,0,-1--1--1,,1|(97,343)|
+1,23,3,16,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(94,237)|
+10,24,"kg/kgton",70,702,29,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,25,24,12,0,0,0,0,0,64,0,-1--1--1,,1|(103,670)|
+10,26,Debt share,946,534,35,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,27,Equity share,946,659,39,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,28,Debt interest,948,576,41,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,29,Equity IRR,944,619,36,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,30,26,27,1,0,0,0,0,64,0,-1--1--1,,1|(1037,580)|
+10,31,"WACC / Discount rate",766,585,43,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,32,27,31,0,0,0,0,0,64,0,-1--1--1,,1|(870,627)|
+1,33,29,31,0,0,0,0,0,64,0,-1--1--1,,1|(865,604)|
+1,34,28,31,0,0,0,0,0,64,0,-1--1--1,,1|(864,579)|
+1,35,26,31,0,0,0,0,0,64,0,-1--1--1,,1|(866,555)|
+10,36,Year value,769,471,40,20,3,3,0,0,0,0,0,0,0,0,0,0,0,0
+12,37,48,948,473,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,38,40,36,4,0,0,22,0,0,0,-1--1--1,,1|(845,471)|
+1,39,40,37,100,0,0,22,0,0,0,-1--1--1,,1|(915,471)|
+11,40,48,887,471,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,41,Time step plus one,887,498,41,19,40,131,0,0,-1,0,0,0,0,0,0,0,0,0
+10,42,TIME STEP,926,414,50,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,43,42,40,0,0,0,0,0,64,0,-1--1--1,,1|(908,439)|
+1,44,36,31,0,0,0,0,0,64,0,-1--1--1,,1|(767,521)|
+10,45,Cumulative income from subsidies,332,838,64,27,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,46,48,86,835,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,47,49,45,4,0,0,22,0,0,0,-1--1--1,,1|(224,835)|
+1,48,49,46,100,0,0,22,0,0,0,-1--1--1,,1|(132,835)|
+11,49,48,174,835,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,50,Revenues from subsidy,174,862,48,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,51,Subsidy signal,331,920,45,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,52,Subsidy period,330,986,48,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,53,52,51,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(330,964)|
+10,54,Subsidy price,174,989,43,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,55,54,50,0,0,0,0,3,64,0,255-0-0,|12||0-0-0,1|(174,936)|
+1,56,51,50,0,0,0,0,0,64,0,-1--1--1,,1|(260,894)|
+1,57,24,49,0,0,0,0,0,64,0,-1--1--1,,1|(119,765)|
+1,58,5,49,0,0,0,0,0,64,0,-1--1--1,,1|(197,769)|
+10,59,Gross income,796,255,65,22,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,60,48,560,252,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,61,63,59,4,0,0,22,0,0,0,-1--1--1,,1|(693,252)|
+1,62,63,60,100,0,0,22,0,0,0,-1--1--1,,1|(607,252)|
+11,63,48,650,252,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,64,Income including inflation,650,281,59,21,40,131,0,0,-1,0,0,0,0,0,0,0,0,0
+10,65,Inflation rate,1055,244,40,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,66,17,64,1,0,0,0,0,64,0,-1--1--1,,1|(350,316)|
+1,67,11,64,1,0,0,0,0,64,0,-1--1--1,,1|(557,357)|
+1,68,49,64,1,0,0,0,0,64,0,-1--1--1,,1|(315,783)|
+1,69,36,70,1,0,0,0,0,64,0,-1--1--1,,1|(898,372)|
+10,70,Cumulative inflation,1032,305,36,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,71,65,70,0,0,0,0,0,64,0,-1--1--1,,1|(1047,263)|
+1,72,70,64,1,0,0,0,0,64,0,-1--1--1,,1|(800,312)|
+10,73,Cumulative direct costs,984,884,40,20,3,3,0,0,0,0,0,0,0,0,0,0,0,0
+12,74,48,791,884,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,75,77,73,4,0,0,22,0,0,0,-1--1--1,,1|(911,884)|
+1,76,77,74,100,0,0,22,0,0,0,-1--1--1,,1|(833,884)|
+11,77,48,872,884,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,78,Direct costs,872,903,38,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,79,Installed capacity electrolysers,949,1001,60,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,80,Installed wind capacity,902,814,49,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,81,OPEX wind hub and infrastructure,761,814,67,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,82,OPEX electrolysis,769,1002,58,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,83,81,77,0,0,0,0,0,64,0,-1--1--1,,1|(822,852)|
+1,84,80,77,0,0,0,0,0,64,0,-1--1--1,,1|(886,849)|
+1,85,79,78,0,0,0,0,0,64,0,-1--1--1,,1|(911,953)|
+1,86,82,78,0,0,0,0,0,64,0,-1--1--1,,1|(814,957)|
+10,87,Decommissioning electrolysis,1174,1014,56,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,88,Decommissioning wind hub,1154,828,56,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,89,OPEX electrolysis change,733,1088,59,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,90,OPEX wind change,632,749,40,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,91,90,81,0,0,0,0,0,64,0,-1--1--1,,1|(689,778)|
+1,92,89,82,0,0,0,0,0,64,0,-1--1--1,,1|(749,1047)|
+10,93,Total decommissioning costs,1202,910,72,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,94,80,93,0,0,0,0,0,64,0,-1--1--1,,1|(1039,857)|
+1,95,88,93,0,0,0,0,0,64,0,-1--1--1,,1|(1174,862)|
+1,96,79,93,0,0,0,0,0,64,0,-1--1--1,,1|(1068,957)|
+1,97,87,93,0,0,0,0,0,64,0,-1--1--1,,1|(1185,968)|
+10,98,Total investment,1199,708,51,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,99,80,98,0,0,0,0,0,64,0,-1--1--1,,1|(1052,760)|
+1,100,1,98,0,0,0,0,0,64,0,-1--1--1,,1|(1196,662)|
+10,101,Total investment from equity,1447,355,60,24,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,102,Total investment from debt,1453,468,56,23,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,103,Investment spread,1189,288,57,11,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,104,Debt repayment period,1525,562,52,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+10,105,Investment spread signal,1162,415,58,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,106,103,105,0,0,0,0,0,64,0,-1--1--1,,1|(1177,340)|
+12,107,48,1247,356,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,108,110,101,4,0,0,22,0,0,0,-1--1--1,,1|(1357,356)|
+1,109,110,107,100,0,0,22,0,0,0,-1--1--1,,1|(1286,356)|
+11,110,48,1322,356,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,111,Equity financing rate,1322,383,50,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,112,105,111,0,0,0,0,0,64,0,-1--1--1,,1|(1239,399)|
+12,113,48,1249,465,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,114,116,102,4,0,0,22,0,0,0,-1--1--1,,1|(1365,465)|
+1,115,116,113,100,0,0,22,0,0,0,-1--1--1,,1|(1290,465)|
+11,116,48,1328,465,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,117,Debt financing rate,1328,484,59,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,118,105,116,0,0,0,0,0,64,0,-1--1--1,,1|(1264,445)|
+1,119,98,117,0,0,0,0,0,64,0,-1--1--1,,1|(1259,602)|
+1,120,98,111,1,0,0,0,0,64,0,-1--1--1,,1|(1328,585)|
+1,121,26,117,0,0,0,0,0,64,0,-1--1--1,,1|(1118,511)|
+1,122,27,111,0,0,0,0,0,64,0,-1--1--1,,1|(1122,529)|
+1,123,103,110,1,0,0,0,0,64,0,-1--1--1,,1|(1287,301)|
+1,124,103,116,1,0,0,0,0,64,0,-1--1--1,,1|(1224,369)|
+1,125,93,78,1,0,0,0,0,64,0,-1--1--1,,1|(941,927)|
+10,126,Decommissioning timing signal,988,721,56,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,127,126,77,1,0,0,0,0,64,0,-1--1--1,,1|(975,813)|
+10,128,Operating time,497,705,47,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,129,Operating time signal,372,738,47,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,130,128,129,0,0,0,0,0,64,0,-1--1--1,,1|(444,718)|
+1,131,129,49,0,0,0,0,0,64,0,-1--1--1,,1|(262,791)|
+1,132,129,12,0,0,0,0,0,64,0,-1--1--1,,1|(271,682)|
+1,133,128,126,0,0,0,0,0,64,0,-1--1--1,,1|(731,712)|
+1,134,129,17,1,0,0,0,0,64,0,-1--1--1,,1|(445,593)|
+10,135,Total loan,1378,682,32,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,136,26,135,1,0,0,0,0,64,0,-1--1--1,,1|(1243,586)|
+1,137,98,135,0,0,0,0,0,64,0,-1--1--1,,1|(1290,694)|
+10,138,Debt repayment signal,1581,636,52,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,139,104,138,0,0,0,0,0,64,0,-1--1--1,,1|(1548,593)|
+10,140,Residual debt,1686,723,40,20,3,3,0,0,0,0,0,0,0,0,0,0,0,0
+12,141,48,1530,719,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,142,144,140,4,0,0,22,0,0,0,-1--1--1,,1|(1617,719)|
+1,143,144,141,100,0,0,22,0,0,0,-1--1--1,,1|(1558,719)|
+11,144,48,1583,719,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,145,Debt shift,1583,738,31,11,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,146,135,144,0,0,0,0,0,64,0,-1--1--1,,1|(1486,700)|
+1,147,104,144,1,0,0,0,0,64,0,-1--1--1,,1|(1512,639)|
+1,148,138,144,0,0,0,0,0,64,0,-1--1--1,,1|(1581,677)|
+1,149,117,145,1,0,0,0,0,64,0,-1--1--1,,1|(1493,721)|
+10,150,Interest over debt,1827,818,56,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,151,28,150,1,0,0,0,0,64,0,-1--1--1,,1|(1217,794)|
+1,152,140,150,0,0,0,0,0,64,0,-1--1--1,,1|(1756,771)|
+10,153,Debt repayments,1824,682,54,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,154,135,153,0,0,0,0,0,64,0,-1--1--1,,1|(1583,682)|
+1,155,138,153,0,0,0,0,0,64,0,-1--1--1,,1|(1694,656)|
+1,156,104,153,0,0,0,0,0,64,0,-1--1--1,,1|(1677,623)|
+1,157,77,64,1,0,0,0,0,64,0,-1--1--1,,1|(692,524)|
+10,158,Income including inflation,1814,602,58,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,159,Equity financing rate,1819,744,55,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,160,Cumulative cash flow before taxes,2163,709,66,22,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,161,48,1936,708,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,162,164,160,4,0,0,22,0,0,0,-1--1--1,,1|(2061,709)|
+1,163,164,161,100,0,0,22,0,0,0,-1--1--1,,1|(1980,709)|
+11,164,48,2020,709,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,165,Cash flow before taxes,2020,736,55,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,166,150,165,0,0,0,0,0,64,0,-1--1--1,,1|(1907,783)|
+1,167,159,165,0,0,0,0,0,64,0,-1--1--1,,1|(1912,740)|
+1,168,153,164,0,0,0,0,0,64,0,-1--1--1,,1|(1938,697)|
+1,169,158,164,0,0,0,0,0,64,0,-1--1--1,,1|(1925,660)|
+10,170,Year value,2106,965,44,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,171,Net present value vs time,2178,1050,61,27,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,172,48,1972,1052,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,173,175,171,4,0,0,22,0,0,0,-1--1--1,,1|(2080,1052)|
+1,174,175,172,100,0,0,22,0,0,0,-1--1--1,,1|(2007,1052)|
+11,175,48,2038,1052,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,176,"Net-present value at time",2038,1079,57,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,177,170,175,0,0,0,0,0,64,0,-1--1--1,,1|(2073,1006)|
+1,178,165,175,0,0,0,0,0,64,0,-1--1--1,,1|(2028,893)|
+1,179,29,175,1,0,0,0,0,64,0,-1--1--1,,1|(1475,906)|
+10,180,"Euro/billion Euro",2010,1167,53,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,181,180,176,0,0,0,0,0,64,0,-1--1--1,,1|(2019,1133)|
+10,182,"Free-Cash Flow",1715,255,147,19,3,131,0,15,0,0,0,0,0-64-128,0-64-128,|18||255-255-255,0,0,0,0,0,0
+///---\\\
+:L<%^E!@
+1:current.vdfx
+1:C:\Users\imdij\OneDrive\Bureaublad\THESIS_PYEMA\models\InternshipPilot\current.vdfx
+1:C:\Users\imdij\OneDrive\Bureaublad\Internship_Van_Oord\Deliverable1\current.vdfx
+4:Time
+5:"Free-Cash Flow"
+9:current
+19:70,2
+24:2030
+25:2058
+26:2058
+23:0
+15:0,0,0,0,0,0
+27:0,
+34:0,
+42:1
+72:0
+73:0
+35:Date
+36:YYYY-MM-DD
+37:2000
+38:1
+39:1
+40:0
+41:0
+95:0
+96:0
+97:0
+77:0
+78:0
+93:0
+94:0
+92:0
+91:0
+90:0
+87:0
+75:
+43:
