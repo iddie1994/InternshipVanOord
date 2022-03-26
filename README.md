@@ -7,8 +7,7 @@ Recognize the .vpmx files. These are the published Vensim models that represent 
 # Python - EMA workbench application
 The system dynamics (SD) models interact with the EMA workbench applied in PyCharm. The modeling method is therefore called ESDMA. As said, the workbench is made to interact with Vensim DSS, however, the integration of a Pysd (another SD python package) connector allows to interact with Vensim PLE - the unpayed version. 
 
-The MAIN Py models are listed with a 1 in front of the filename.
-The applied result methodologies during the research are listed with a 2, 3 and 4 in front of the filename.
+The MAIN offshore gas DSS and Py models are listed with a 0 in front of the filename. The MAIN offshore wind P2H Py (PLE) models are listed with a 1 in front of the filename. The applied result methods during the research are listed with a 2, 3 and 4 in front of the filename.
 
 Lastly, a txt file is added. This can be uploaded in the 'cmd prompt' to immediately install the required PyCharm packages. 
 
